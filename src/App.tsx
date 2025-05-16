@@ -22,20 +22,40 @@ import { Altair } from "./components/altair/Altair";
 import ControlTray from "./components/control-tray/ControlTray";
 import cn from "classnames";
 
-const API_KEY = process.env.REACT_APP_GEMINI_API_KEY as string;
-if (typeof API_KEY !== "string") {
-  throw new Error("set REACT_APP_GEMINI_API_KEY in .env");
-}
-
+const API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
 const host = "generativelanguage.googleapis.com";
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
 function App() {
-  // this video reference is used for displaying the active stream, whether that is the webcam or screen capture
-  // feel free to style as you see fit
   const videoRef = useRef<HTMLVideoElement>(null);
-  // either the screen capture, the video or null, if null we hide it
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+
+  if (!API_KEY) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+          <h1 className="text-xl font-semibold text-red-600 mb-4">API Key Required</h1>
+          <p className="text-gray-700 mb-4">
+            Please set your Gemini API key in the <code className="bg-gray-100 px-2 py-1 rounded">.env</code> file:
+          </p>
+          <pre className="bg-gray-100 p-3 rounded mb-4 overflow-x-auto">
+            REACT_APP_GEMINI_API_KEY=your_api_key
+          </pre>
+          <p className="text-gray-700 mb-2">
+            You can get an API key from:
+          </p>
+          <a 
+            href="https://aistudio.google.com/apikey"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 underline"
+          >
+            https://aistudio.google.com/apikey
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
@@ -44,7 +64,6 @@ function App() {
           <SidePanel />
           <main>
             <div className="main-app-area">
-              {/* APP goes here */}
               <Altair />
               <video
                 className={cn("stream", {
