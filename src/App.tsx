@@ -26,35 +26,43 @@ const API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
 const host = "generativelanguage.googleapis.com";
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
+function ApiKeyMissing() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="material-symbols-outlined text-red-500">error</span>
+          <h1 className="text-xl font-semibold text-gray-900">API Key Required</h1>
+        </div>
+        <p className="text-gray-600 mb-4">
+          Please set your Gemini API key in the <code className="bg-gray-100 px-2 py-1 rounded font-mono text-sm">.env</code> file:
+        </p>
+        <pre className="bg-gray-50 p-4 rounded-lg mb-4 overflow-x-auto font-mono text-sm border border-gray-200">
+          REACT_APP_GEMINI_API_KEY=your_api_key
+        </pre>
+        <p className="text-gray-600 mb-3">
+          You can get an API key from:
+        </p>
+        <a 
+          href="https://aistudio.google.com/apikey"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          <span>Google AI Studio</span>
+          <span className="material-symbols-outlined text-sm">open_in_new</span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
 
   if (!API_KEY) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-          <h1 className="text-xl font-semibold text-red-600 mb-4">API Key Required</h1>
-          <p className="text-gray-700 mb-4">
-            Please set your Gemini API key in the <code className="bg-gray-100 px-2 py-1 rounded">.env</code> file:
-          </p>
-          <pre className="bg-gray-100 p-3 rounded mb-4 overflow-x-auto">
-            REACT_APP_GEMINI_API_KEY=your_api_key
-          </pre>
-          <p className="text-gray-700 mb-2">
-            You can get an API key from:
-          </p>
-          <a 
-            href="https://aistudio.google.com/apikey"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 underline"
-          >
-            https://aistudio.google.com/apikey
-          </a>
-        </div>
-      </div>
-    );
+    return <ApiKeyMissing />;
   }
 
   return (
@@ -81,7 +89,6 @@ function App() {
               onVideoStreamChange={setVideoStream}
               enableEditingSettings={true}
             >
-              {/* put your own buttons here */}
             </ControlTray>
           </main>
         </div>
